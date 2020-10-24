@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="mancalaApp">
+<head>
+    <title>Mancala Game</title>
+    <script src="/webjars/angularjs/1.4.3/angular.js"></script>
+    <script src="/webjars/angularjs/1.4.3/angular-route.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3-1/stomp.js"></script>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.js"></script>
+    <script src="/webjars/jquery/3.1.0/jquery.js"></script>
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script src="js/GameModule.js"></script>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style>
+        .navbar {
+            background-color: #FF8C00;
+            border: 0px solid #FFFFFF;
+            color: #FFFFFF;
+        }
+        .btn-primary {
+            background-color: #FF8C00;
+            border: 0px solid #FFFFFF;
+            color: #FFFFFF;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse">
+        <div align="right">
+        <a style="color: #FFFFFF;" href="/login?logout">Logout</a>
+        </div>
+        <div align="center">
+            <a style="color: #FFFFFF;" >Mancala Game</a>
+        </div>
+</nav>
+
+<div ng-view="name"></div>
+
+</body>
+</html>

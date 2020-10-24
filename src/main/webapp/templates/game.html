@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="col-md-800" align="center">
+
+                <div class="row center-block" style="margin-left: 10px; margin-top: 20px;">
+                        Player in Action : {{gameTurn.username}}
+                </div>
+             <!--   <div class="row center-block" style="margin-left: 10px; margin-top: 20px;">
+                        Score: {{gameScore}}
+                </div>-->
+                <div class="row center-block" style="margin-left: 10px; margin-top: 20px;">
+                        Game State: {{gameState}}
+                </div>
+            <br>
+            <br>
+
+            <div class="col-md-80">
+                    <div class="row center-block">
+                       <a data-ng-click="move(13);" class="btn btn-primary" style="width: 100px;">Pit 13 ( <strong>{{gameBoard[13]}}</strong> )</a>
+                        <a data-ng-click="move(12);" class="btn btn-primary" style="width: 100px;">Pit 12 ( <strong>{{gameBoard[12]}}</strong> )</a>
+                        <a data-ng-click="move(11);" class="btn btn-primary" style="width: 100px;">Pit 11 ( <strong>{{gameBoard[11]}}</strong> ) </a>
+                        <a data-ng-click="move(10);" class="btn btn-primary" style="width: 100px;">Pit 10 ( <strong>{{gameBoard[10]}}</strong> )</a>
+                        <a data-ng-click="move(9);" class="btn btn-primary" style="width: 100px;">Pit 9 ( <strong>{{gameBoard[9]}}</strong> )</a>
+                        <a data-ng-click="move(8);" class="btn btn-primary" style="width: 100px;">Pit 8 ( <strong>{{gameBoard[8]}}</strong> ) </a>
+                        <div align = 'left'  >Mancala P2 (<strong>{{gameBoard[14]}}</strong> )</div>
+
+                    </div>
+                    <br>
+                    <div class="row center-block">
+                        <div align = 'right'>Mancala P1 - <strong>{{gameBoard[7]}}</strong></div>
+                        <a data-ng-click="move(1);" class="btn btn-primary" style="width: 100px;">Pit 1 ( <strong>{{gameBoard[1]}}</strong> )</a>
+                        <a data-ng-click="move(2);" class="btn btn-primary" style="width: 100px;">Pit 2 ( <strong>{{gameBoard[2]}}</strong> )</a>
+                        <a data-ng-click="move(3);" class="btn btn-primary" style="width: 100px;">Pit 3 ( <strong>{{gameBoard[3]}}</strong> )</a>
+                        <a data-ng-click="move(4);" class="btn btn-primary" style="width: 100px;">Pit 4 ( <strong>{{gameBoard[4]}}</strong> )</a>
+                        <a data-ng-click="move(5);" class="btn btn-primary" style="width: 100px;">Pit 5 ( <strong>{{gameBoard[5]}}</strong> )</a>
+                        <a data-ng-click="move(6);" class="btn btn-primary" style="width: 100px;">Pit 6 ( <strong>{{gameBoard[6]}}</strong> )</a>
+
+                    </div>
+                </div>
+
+    </div>
+
