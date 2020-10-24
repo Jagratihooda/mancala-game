@@ -78,14 +78,6 @@ public class LobbyController {
         return gameService.fetchPlayerGames(playerService.fetchLoggedInUser());
     }
 
-
-    @GetMapping(value = "/{id}")
-    public Game loadGame(@PathVariable Long id) {
-        LOGGER.info("Loading Game");
-
-        return gameService.findGameById(id);
-    }
-
     /**
      * This endpoint will be called when a player wants to join a game
      * game

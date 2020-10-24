@@ -132,4 +132,11 @@ public class GameController {
     }
 
 
+    @GetMapping(value = "/{id}")
+    public Game loadGame(@PathVariable Long id) {
+        LOG.info("Loading Game");
+
+        return gameService.findGameById(id);
+    }
+
 }
