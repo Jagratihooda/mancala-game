@@ -1,9 +1,9 @@
 package com.bol.mancala.assignment.enums;
 
 /**
- * Enum to determine the PitType
+ * Enum for Pit Type
  */
 public enum PitType {
-    STORE,
-    HOUSE
+    REGULAR,
+    MANCALA
 }

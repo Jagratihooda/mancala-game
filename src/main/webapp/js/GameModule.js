@@ -8,13 +8,14 @@ gameModule.controller('lobbyController', ['$rootScope', '$scope', '$http', '$loc
 
         scope.createNewGame = function () {
 
-            http.post("/game/create", {
+            http.post("/lobby/game/prepare", {
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8'
                 }
             }).success(function (data, status, headers, config) {
+
                 rootScope.gameId = data.id;
-                location.path('/game/' + rootScope.gameId);
+                location.path('/lobby/' + rootScope.gameId);
             }).error(function (data, status, headers, config) {
                 location.path('/player/panel');
             });
@@ -24,7 +25,6 @@ gameModule.controller('lobbyController', ['$rootScope', '$scope', '$http', '$loc
             var socket = new SockJS('/socket');
             scope.stompClient = Stomp.over(socket);
             scope.stompClient.connect({}, function (frame) {
-                console.log('Connected: ' + frame);
                 scope.stompClient.subscribe('/send-update/lobby', rootScope.reloadPlayerGames);
                 scope.stompClient.subscribe('/send-update/lobby', rootScope.reloadGamesToJoin);
             });
@@ -40,7 +40,7 @@ gameModule.controller('gamesToJoinController', ['$rootScope', '$scope', '$http',
     function (rootScope, scope, http, location) {
         rootScope.reloadGamesToJoin = function () {
             scope.gamesToJoin = [];
-            http.get('/game/list').success(function (data) {
+            http.get('/lobby/to-be-joined/game/list').success(function (data) {
                 scope.gamesToJoin = data;
             }).error(function (data, status, headers, config) {
                 location.path('/player/panel');
@@ -48,14 +48,14 @@ gameModule.controller('gamesToJoinController', ['$rootScope', '$scope', '$http',
 
 
             scope.joinGame = function (id) {
-                var requestUrl = "/game/join?id=" + id;
+                var requestUrl = "/lobby/join/game?id=" + id;
                 http.post(requestUrl, {
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8'
                     }
                 }).success(function (data) {
                     rootScope.gameId = data.id;
-                    location.path('/game/' + data.id);
+                    location.path('/lobby/' + data.id);
                 }).error(function (data, status, headers, config) {
                     location.path('/player/panel');
                 });
@@ -72,7 +72,7 @@ gameModule.controller('playerGamesController', ['$rootScope', '$scope', '$http',
 
             scope.playerGames = [];
 
-            http.get('/game/player/list').success(function (data) {
+            http.get('/lobby/player/own-games/list').success(function (data) {
                 scope.playerGames = data;
             }).error(function (data, status, headers, config) {
                 location.path('/player/panel');
@@ -81,8 +81,8 @@ gameModule.controller('playerGamesController', ['$rootScope', '$scope', '$http',
             scope.loadGame = function (id) {
                 console.log(id);
                 rootScope.gameId = id;
-                http.get('/game/' + id).success(function (data) {
-                    location.path('/game/' + id);
+                http.get('/lobby/' + id).success(function (data) {
+                    location.path('/lobby/' + id);
                 }).error(function (data, status, headers, config) {
                     location.path('/player/panel');
                 });
@@ -100,30 +100,26 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
 
         rootScope.reload = function getData() {
 
-            http.get('/play/board').success(function (data) {
+            http.get('/game/current-board').success(function (data) {
                 scope.data = data
                 scope.gameBoard = [];
                 data.pits.forEach(function (pit) {
-                    scope.gameBoard[pit.position] = pit.numberOfStones;
+                    scope.gameBoard[pit.position] = pit.stoneCount;
                 })
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
             });
-            http.get('/play/turn').success(function (data) {
+            http.get('/game/player-in-action').success(function (data) {
                 scope.gameTurn = data;
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
             });
-            http.get('/play/state').success(function (data) {
+            http.get('/game/current-state').success(function (data) {
                 scope.gameState = data;
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
             });
-            http.get('/play/score').success(function (data) {
-                scope.gameScore = data;
-            }).error(function (data, status, headers, config) {
-                scope.errorMessage = "Failed do load game properties";
-            });
+
         };
 
         rootScope.reload();
@@ -136,14 +132,13 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
                 scope.stompClient.subscribe('/send-update/position/' + rootScope.gameId, scope.reload);
                 scope.stompClient.subscribe('/send-update/join/' + rootScope.gameId, scope.reload);
             }, function (error) {
-                alert(error.headers.message);
             });
         };
 
         scope.connectBoard();
 
         scope.move = function (id) {
-            http.post('/play/move/' + id).success(function (data) {
+            http.post('/game/make-move?position='+id).success(function (data) {
                 scope.data = data
                 scope.reload();
             }).error(function (data, status, headers, config) {
@@ -164,7 +159,7 @@ mancalaApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'templates/lobby.html',
         controller: 'lobbyController'
     }).
-    when('/game/:id', {
+    when('/lobby/:id', {
         templateUrl: 'templates/game.html',
         controller: 'gameController'
     }).

@@ -19,24 +19,25 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-
+    /**
+     * This method is used to prepare a new Board for a given Game
+     * game
+     * @param  game
+     * @return board
+     */
     public Board prepareNewBoard(Game game) {
         Board board = Board.builder().game(game).build();
         boardRepository.save(board);
         return board;
     }
 
-
-    public Board createNewBoard(Game game) {
-        Board board = new Board(game);
-
-        boardRepository.save(board);
-
-        return board;
-    }
-
-
-    public Board getBoardByGame(Game game) {
+    /**
+     * This method is used to fetch a Board for a given Game
+     * game
+     * @param  game
+     * @return board
+     */
+    public Board fetchBoardByGame(Game game) {
         return boardRepository.findByGame(game);
     }
 

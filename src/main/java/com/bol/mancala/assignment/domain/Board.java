@@ -2,13 +2,9 @@ package com.bol.mancala.assignment.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Board domain class
- */
 @Entity
 @Getter
 @Setter

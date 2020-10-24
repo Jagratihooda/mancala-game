@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for @{@link Game}
- */
+
 @Repository
 public interface GameRepository extends CrudRepository<Game, Long> {
 

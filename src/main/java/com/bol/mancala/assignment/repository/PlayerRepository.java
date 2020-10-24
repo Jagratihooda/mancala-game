@@ -1,12 +1,10 @@
 package com.bol.mancala.assignment.repository;
 
 import com.bol.mancala.assignment.domain.Player;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-/**
- * Repository for @{@link Player}
- */
+
 @Repository
 public interface PlayerRepository extends CrudRepository<Player, Long> {
 

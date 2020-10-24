@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for @{@link Pit}
- */
+
 @Repository
 public interface PitRepository extends CrudRepository<Pit, Long> {
 

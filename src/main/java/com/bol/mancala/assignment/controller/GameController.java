@@ -1,103 +1,134 @@
 package com.bol.mancala.assignment.controller;
 
+import com.bol.mancala.assignment.constants.MancalaConstants;
 import com.bol.mancala.assignment.domain.Board;
 import com.bol.mancala.assignment.domain.Game;
 import com.bol.mancala.assignment.domain.Player;
+import com.bol.mancala.assignment.enums.GameState;
 import com.bol.mancala.assignment.service.BoardService;
 import com.bol.mancala.assignment.service.GameService;
-import com.bol.mancala.assignment.service.PitService;
+import com.bol.mancala.assignment.service.PlayService;
 import com.bol.mancala.assignment.service.PlayerService;
-import com.kalah.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+/**
+ * Controller to handle game related calls
+ */
 @RestController
 @RequestMapping("/game")
 public class GameController {
 
+    private GameService gameService;
     private PlayerService playerService;
     private BoardService boardService;
-    private PitService pitService;
-    private GameService gameService;
+    private PlayService playService;
+    private HttpSession httpSession;
+    private SimpMessagingTemplate template;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
+    private final Logger LOG = LoggerFactory.getLogger(GameController.class);
 
 
     @Autowired
-    public GameController(GameService gameService, BoardService boardService, PitService pitService, PlayerService playerService
-                          ) {
+    public GameController(GameService gameService, PlayerService playerService,
+                          BoardService boardService, PlayService playService,
+                          HttpSession httpSession, SimpMessagingTemplate template) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.boardService = boardService;
-        this.pitService = pitService;
+        this.playService = playService;
+        this.httpSession = httpSession;
+        this.template = template;
     }
 
     /**
-     * This Method is used to create a new game
-     * game
-     * @return game
+     * This endpoint will be called to fetch a board
+     *
+     * @return board
      */
-    @PostMapping(value = "/create")
-    public Game prepareNewGame() {
-        LOGGER.info("Preparing new game");
+    @GetMapping(value = "/current-board")
+    public Board fetchBoard() {
+        LOG.info("Fetching current board");
 
-        Game game = gameService.prepareNewGame(playerService.getPlayerDetails());
-        Board board = boardService.prepareNewBoard(game);
-        pitService.preparePit(board);
+        Long gameId = (Long) httpSession.getAttribute(MancalaConstants.GAME_SESSION_ID);
 
-        LOGGER.error("New game is created " + game.getId());
-        return game;
+        Game game = gameService.findGameById(gameId);
+        Board board = boardService.fetchBoardByGame(game);
+
+        LOG.info(String.format("Current Board is fetched with board id %s ", board.getId()));
+        return board;
     }
 
     /**
-     * This endpoint will be called to list games having just one player
+     * This endpoint will be called while making a move by the player
      * game
-     * @return List of games
+     *
+     * @return board
      */
-    @GetMapping(value = "/list")
-    public List<Game> getGamesWaitingForSecondPlayer() {
-        LOGGER.info("Loading games to Join");
 
-        return gameService.fetchGamesToJoinForAPlayer(playerService.fetchLoggedInUser());
+    @PostMapping(value = "/make-move")
+    public Board makeMove(@RequestParam(name = "position") int position) {
+        LOG.info("Making a move for Player");
+
+        Long gameId = (Long) httpSession.getAttribute(MancalaConstants.GAME_SESSION_ID);
+
+        Game game = gameService.findGameById((Long) httpSession.getAttribute(MancalaConstants.GAME_SESSION_ID));
+
+        Board board = playService.makeMove(playerService.fetchLoggedInUser(), game, position);
+
+        template.convertAndSend("/send-update/position/" + gameId.toString(), "madeMove");
+
+        if (game.getGameState() == GameState.GAME_FINISHED) {
+            template.convertAndSend("/send-update/lobby", "gameFinished");
+        }
+        return board;
     }
 
     /**
-     * This endpoint will be called to load a list of games belong to a player
+     * This endpoint will be called to fetch player in Action
      * game
-     * @return List of games
+     *
+     * @return PlayerInAction
      */
-    @GetMapping(value = "/player/list")
-    public List<Game> loadGamesForTheLoggedInPlayer() {
-        LOGGER.info("Loading player's game");
 
-        return gameService.fetchPlayerGames(playerService.fetchLoggedInUser());
-    }
+    @RequestMapping(value = "/player-in-action")
+    public Player fetchPlayerInAction() {
+        LOG.info("Fetch player in action");
 
+        Long gameId = (Long) httpSession.getAttribute(MancalaConstants.GAME_SESSION_ID);
+        Game game = gameService.findGameById(gameId);
 
-    @GetMapping(value = "/{id}")
-    public Game loadGame(@PathVariable Long id) {
-        LOGGER.info("Loading Game");
+        Player playerInAction = game.getPlayerInAction();
 
-        return gameService.findGameById(id);
+        LOG.info(String.format("Fetched player in action with id %s ", playerInAction.getId()));
+
+        return playerInAction;
     }
 
     /**
-     * This endpoint will be called when a player wants to join a game
+     * This endpoint will be called to fetch current state of a game
      * game
-     * @return game
+     *
+     * @return gameState
      */
-    @PostMapping(value = "/join")
-    public Game joinAnExistingGame(@RequestParam(name = "id") Long id) {
-        LOGGER.info("Joining an existing game");
 
-        Player player = playerService.fetchLoggedInUser();
-        Game game = gameService.joinAnExistingGame(player, id);
+    @RequestMapping(value = "/current-state")
+    public GameState fetchState() {
+        LOG.info("Fetching game's current state");
 
-        LOGGER.info("Player joined an existing game with id" + id);
-        return game;
+        Long gameId = (Long) httpSession.getAttribute(MancalaConstants.GAME_SESSION_ID);
+        Game game = gameService.findGameById(gameId);
+
+        GameState gameState = game.getGameState();
+
+        LOG.info(String.format("Fetched game's current state %s ", gameState));
+
+        return gameState;
     }
 
 
