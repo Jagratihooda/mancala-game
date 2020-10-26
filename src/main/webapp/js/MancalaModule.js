@@ -7,7 +7,7 @@ mancalaModule.controller('gameController', ['$rootScope', '$routeParams', '$scop
 
         rootScope.reload = function getData() {
 
-            http.get('/game/current-board').success(function (data) {
+            http.get('/board/current-board').success(function (data) {
                 scope.data = data
                 scope.gameBoard = [];
                 data.pits.forEach(function (pit) {
@@ -16,12 +16,12 @@ mancalaModule.controller('gameController', ['$rootScope', '$routeParams', '$scop
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
             });
-            http.get('/game/player-in-action').success(function (data) {
+            http.get('/board/player-in-action').success(function (data) {
                 scope.gameTurn = data;
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
             });
-            http.get('/game/current-state').success(function (data) {
+            http.get('/board/current-state').success(function (data) {
                 scope.gameState = data;
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
@@ -44,7 +44,7 @@ mancalaModule.controller('gameController', ['$rootScope', '$routeParams', '$scop
         scope.connectBoard();
 
         scope.move = function (id) {
-            http.post('/game/make-move?position='+id).success(function (data) {
+            http.post('/board/make-move?position='+id).success(function (data) {
                 scope.data = data
                 scope.reload();
             }).error(function (data, status, headers, config) {
@@ -69,7 +69,7 @@ mancalaModule.controller('lobbyController', ['$rootScope', '$scope', '$http', '$
                 }
             }).success(function (data, status, headers, config) {
                 rootScope.gameId = data.id;
-                location.path('/game/' + rootScope.gameId);
+                location.path('/board/' + rootScope.gameId);
             })
         };
 
@@ -105,7 +105,7 @@ mancalaModule.controller('gamesToJoinController', ['$rootScope', '$scope', '$htt
                     }
                 }).success(function (data) {
                     rootScope.gameId = data.id;
-                    location.path('/game/' + data.id);
+                    location.path('/board/' + data.id);
                 })
             }
         };
@@ -128,8 +128,8 @@ mancalaModule.controller('playerGamesController', ['$rootScope', '$scope', '$htt
 
             scope.loadGame = function (id) {
                 rootScope.gameId = id;
-                http.get('/game/' + id).success(function (data) {
-                    location.path('/game/' + id);
+                http.get('/board/' + id).success(function (data) {
+                    location.path('/board/' + id);
                 })
             }
         };
@@ -143,8 +143,8 @@ var mancalaApp = angular.module('mancalaApp', ['ngRoute', 'mancalaModule']);
 
 mancalaApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-    when('/game/:id', {
-        templateUrl: 'templates/game.html',
+    when('/board/:id', {
+        templateUrl: 'templates/board.html',
         controller: 'gameController'
     }).
      otherwise({

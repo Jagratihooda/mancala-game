@@ -1,14 +1,13 @@
-package com.bol.mancala.assignment;
+package com.bol.mancala.assignment.service;
 
 import com.bol.mancala.assignment.domain.Board;
 import com.bol.mancala.assignment.domain.Game;
 import com.bol.mancala.assignment.repository.BoardRepository;
-import com.bol.mancala.assignment.service.BoardService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -16,12 +15,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BoardServiceTest {
-
     @Mock
     private BoardRepository boardRepositoryMock;
 
+    @Mock
     private BoardService boardService;
 
     @Before
@@ -30,18 +29,19 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void testCreateNewBoard() {
-        // Test specific init
+    public void testPrepareNewBoard() {
         Game gameMock = mock(Game.class);
+        Board result = boardService.prepareNewBoard(gameMock);
 
-        // Test rules
-
-        // Call to SUT
-        Board result = boardService.createNewBoard(gameMock);
-
-        // Verify result/calls
         assertEquals(result.getGame(), gameMock);
-
         verify(boardRepositoryMock, times(1)).save(any(Board.class));
+    }
+
+    @Test
+    public void testFetchBoardByGame() {
+        Game gameMock = mock(Game.class);
+        boardService.fetchBoardByGame(gameMock);
+        verify(boardRepositoryMock, times(1)).findByGame(any(Game.class));
+
     }
 }

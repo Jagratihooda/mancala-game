@@ -21,8 +21,8 @@ import javax.servlet.http.HttpSession;
  * Controller to handle game related calls
  */
 @RestController
-@RequestMapping("/game")
-public class GameController {
+@RequestMapping("/board")
+public class BoardController {
 
     private GameService gameService;
     private PlayerService playerService;
@@ -31,11 +31,11 @@ public class GameController {
     private HttpSession httpSession;
     private SimpMessagingTemplate template;
 
-    private final Logger LOG = LoggerFactory.getLogger(GameController.class);
+    private final Logger LOG = LoggerFactory.getLogger(BoardController.class);
 
 
     @Autowired
-    public GameController(GameService gameService, PlayerService playerService,
+    public BoardController(GameService gameService, PlayerService playerService,
                           BoardService boardService, PlayService playService,
                           HttpSession httpSession, SimpMessagingTemplate template) {
         this.gameService = gameService;

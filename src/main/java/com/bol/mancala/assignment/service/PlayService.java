@@ -3,6 +3,7 @@ package com.bol.mancala.assignment.service;
 import com.bol.mancala.assignment.constants.MancalaConstants;
 import com.bol.mancala.assignment.domain.Board;
 import com.bol.mancala.assignment.domain.Game;
+import com.bol.mancala.assignment.domain.Pit;
 import com.bol.mancala.assignment.domain.Player;
 import com.bol.mancala.assignment.enums.GameState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class PlayService {
 
 
     public Board makeMove(Player player, Game game, int position) {
-        Board board = boardService.fetchBoardByGame(game);
+        Board board = null;
 
         if(checkTurn.test(game, player)) {
 
@@ -52,10 +53,11 @@ public class PlayService {
     private BiPredicate<Game,Player> checkTurn = (game, player) ->
          game.getPlayerInAction() == player && game.getGameState() != GameState.GAME_FINISHED;
 
+
     private Board handlePlayerMove(Game game, int position, int startPitPos, int endPitPos, int mancalaPos) {
         Board board = boardService.fetchBoardByGame(game);
-        int stoneCount = pitService.fetchPitByBoardAndPosition(board, position).getStoneCount();
-
+         Pit pit = pitService.fetchPitByBoardAndPosition(board, position);
+         int stoneCount = pit.getStoneCount();
         if(position >= startPitPos && position <= endPitPos && stoneCount > 0) {
             int newPosition = shiftStones(board, position, endPitPos, mancalaPos, stoneCount);
 
@@ -105,7 +107,6 @@ public class PlayService {
              else if(mancalaPos == MancalaConstants.FIRST_PLAYER_MANCALA_POSITION && position == MancalaConstants.SECOND_PLAYER_MANCALA_POSITION ){
                 position = MancalaConstants.FIRST_PLAYER_STARTING_PIT_POSITION;
             }
-
             // Add stone for every pit
             pitService.updateStonesByAmount(board, position, 1);
 

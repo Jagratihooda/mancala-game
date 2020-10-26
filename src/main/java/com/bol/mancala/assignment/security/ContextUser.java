@@ -3,11 +3,11 @@ package com.bol.mancala.assignment.security;
 import com.google.common.collect.ImmutableSet;
 import com.bol.mancala.assignment.domain.Player;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import org.springframework.security.core.userdetails.User;
 /**
  * Class for user context
  */
-public class ContextUser extends org.springframework.security.core.userdetails.User {
+public class ContextUser extends User {
 
     private final Player player;
 

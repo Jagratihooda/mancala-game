@@ -8,12 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.springframework.util.StringUtils.isEmpty;
+import org.springframework.util.StringUtils;
 
 /**
- * Class for User details
+ * UserDetailsService implementation class for User details
  */
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -27,15 +25,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        checkNotNull(username);
 
-        if(isEmpty(username)) {
+        if(StringUtils.isEmpty(username)) {
             throw new UsernameNotFoundException("Username cannot be empty");
         }
 
         Player player = playerRepository.findByUsername(username);
+
         if (player == null) {
-            throw new UsernameNotFoundException("Player " + username + " doesn't exists");
+            throw new UsernameNotFoundException("Player with " + username + " doesn't exist");
         }
         return new ContextUser(player);
     }
