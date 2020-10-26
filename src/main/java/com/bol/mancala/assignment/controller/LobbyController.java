@@ -27,7 +27,6 @@ public class LobbyController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(LobbyController.class);
 
-
     @Autowired
     public LobbyController(GameService gameService, BoardService boardService, PitService pitService, PlayerService playerService
                           ) {

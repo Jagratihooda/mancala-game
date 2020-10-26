@@ -3,6 +3,8 @@ package com.bol.mancala.assignment.service;
 import com.bol.mancala.assignment.security.ContextUser;
 import com.bol.mancala.assignment.domain.Player;
 import com.bol.mancala.assignment.repository.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PlayerService {
 
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(PlayerService.class);
 
     @Autowired
     public PlayerService(PlayerRepository playerRepository) {
@@ -23,10 +27,11 @@ public class PlayerService {
     }
 
 
-
     public Player getPlayerDetails() {
         ContextUser principal = (ContextUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Player player = playerRepository.findByUsername(principal.getPlayer().getUsername());
+
+        LOGGER.info("Player's details fetched for id " + player.getId());
         return player;
     }
 

@@ -11,11 +11,7 @@ public class WebSocketSecurityConfig
 
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages.simpDestMatchers("/send-update/").authenticated();
+        messages.simpDestMatchers("/send-update/*").authenticated();
     }
 
-    @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
 }

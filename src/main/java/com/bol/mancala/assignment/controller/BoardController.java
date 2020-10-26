@@ -36,8 +36,8 @@ public class BoardController {
 
     @Autowired
     public BoardController(GameService gameService, PlayerService playerService,
-                          BoardService boardService, PlayService playService,
-                          HttpSession httpSession, SimpMessagingTemplate template) {
+                           BoardService boardService, PlayService playService,
+                           HttpSession httpSession, SimpMessagingTemplate template) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.boardService = boardService;
@@ -105,8 +105,6 @@ public class BoardController {
 
         Player playerInAction = game.getPlayerInAction();
 
-        LOG.info(String.format("Fetched player in action with id %s ", playerInAction.getId()));
-
         return playerInAction;
     }
 
@@ -116,7 +114,6 @@ public class BoardController {
      *
      * @return gameState
      */
-
     @RequestMapping(value = "/current-state")
     public GameState fetchState() {
         LOG.info("Fetching game's current state");
