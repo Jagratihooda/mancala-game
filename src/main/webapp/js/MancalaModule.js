@@ -88,7 +88,7 @@ mancalaModule.controller('lobbyController', ['$rootScope', '$scope', '$http', '$
 ]);
 
 
-mancalaModule.controller('gamesToJoinController', ['$rootScope', '$scope', '$http', '$location',
+mancalaModule.controller('gamesToBeJoinedByController', ['$rootScope', '$scope', '$http', '$location',
     function (rootScope, scope, http, location) {
         rootScope.reloadGamesToJoin = function () {
             scope.gamesToJoin = [];
@@ -114,7 +114,7 @@ mancalaModule.controller('gamesToJoinController', ['$rootScope', '$scope', '$htt
     }]);
 
 
-mancalaModule.controller('playerGamesController', ['$rootScope', '$scope', '$http', '$location', '$routeParams',
+mancalaModule.controller('playerOwnGamesController', ['$rootScope', '$scope', '$http', '$location', '$routeParams',
     function (rootScope, scope, http, location, routeParams) {
         rootScope.reloadPlayerGames  =function () {
 
@@ -122,8 +122,6 @@ mancalaModule.controller('playerGamesController', ['$rootScope', '$scope', '$htt
 
             http.get('/lobby/player/own-games/list').success(function (data) {
                 scope.playerGames = data;
-            }).error(function (data, status, headers, config) {
-                location.path('/player/panel');
             });
 
             scope.loadGame = function (id) {
