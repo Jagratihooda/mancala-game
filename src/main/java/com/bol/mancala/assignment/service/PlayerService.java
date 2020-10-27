@@ -1,47 +1,24 @@
 package com.bol.mancala.assignment.service;
 
-import com.bol.mancala.assignment.security.ContextUser;
 import com.bol.mancala.assignment.domain.Player;
-import com.bol.mancala.assignment.repository.PlayerRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Class for Player related actions
+ * Service for Player related actions
  */
-@Service
-@Transactional
-public class PlayerService {
+public interface PlayerService {
 
-    private final PlayerRepository playerRepository;
+    /**
+     * This method is called to fetch Players details based on username
+     *
+     * @param player
+     */
+    Player getPlayerByUsername(String name);
 
-    private final Logger LOGGER = LoggerFactory.getLogger(PlayerService.class);
+    /**
+     * This method is called to fetch logged in Players details
+     *
+     * @param board
+     */
+    Player fetchLoggedInUser();
 
-    @Autowired
-    public PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
-
-
-    public Player getPlayerDetails() {
-        ContextUser principal = (ContextUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Player player = playerRepository.findByUsername(principal.getPlayer().getUsername());
-
-        LOGGER.info("Player's details fetched for id " + player.getId());
-        return player;
-    }
-
-    public Player getPlayerByUsername(String name) {
-        return playerRepository.findByUsername(name);
-    }
-
-
-    public Player fetchLoggedInUser() {
-        ContextUser principal = (ContextUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return playerRepository.findByUsername(principal.getPlayer().getUsername());
-    }
 }

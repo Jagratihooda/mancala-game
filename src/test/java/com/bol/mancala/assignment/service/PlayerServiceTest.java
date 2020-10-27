@@ -17,11 +17,11 @@ public class PlayerServiceTest {
     @Mock
     private PlayerRepository playerRepositoryMock;
 
-    private PlayerService playerService;
+    private PlayerServiceImpl playerService;
 
     @Before
     public void init() {
-        playerService = new PlayerService(playerRepositoryMock);
+        playerService = new PlayerServiceImpl(playerRepositoryMock);
     }
 
     @Test

@@ -26,13 +26,13 @@ public class GameServiceTest {
     @Mock
     private GameRepository gameRepositoryMock;
 
-    private GameService gameService;
+    private GameServiceImpl gameService;
     @Mock
     private HttpSession httpSessionMock;
 
     @Before
     public void init() {
-        gameService = new GameService(httpSessionMock, gameRepositoryMock);
+        gameService = new GameServiceImpl(httpSessionMock, gameRepositoryMock);
     }
 
     @Test

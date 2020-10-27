@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -20,16 +21,16 @@ import java.util.List;
 @RequestMapping("/lobby")
 public class LobbyController {
 
-    private PlayerService playerService;
-    private BoardService boardService;
-    private PitService pitService;
-    private GameService gameService;
+    private final PlayerService playerService;
+    private final BoardService boardService;
+    private final PitService pitService;
+    private final GameService gameService;
 
     private final Logger LOGGER = LoggerFactory.getLogger(LobbyController.class);
 
     @Autowired
     public LobbyController(GameService gameService, BoardService boardService, PitService pitService, PlayerService playerService
-                          ) {
+    ) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.boardService = boardService;
@@ -39,13 +40,14 @@ public class LobbyController {
     /**
      * This End Point is to create a new game
      * game
+     *
      * @return game
      */
     @PostMapping(value = "/game/prepare")
     public Game prepareNewGame() {
         LOGGER.info("Preparing new game");
 
-        Game game = gameService.prepareNewGame(playerService.getPlayerDetails());
+        Game game = gameService.prepareNewGame(playerService.fetchLoggedInUser());
         Board board = boardService.prepareNewBoard(game);
         pitService.preparePit(board);
 
@@ -56,6 +58,7 @@ public class LobbyController {
     /**
      * This endpoint will be called to list games having just one player
      * game
+     *
      * @return List of games
      */
     @GetMapping(value = "/to-be-joined/game/list")
@@ -68,6 +71,7 @@ public class LobbyController {
     /**
      * This endpoint will be called to load a list of games belong to a player
      * game
+     *
      * @return List of games
      */
     @GetMapping(value = "/player/own-games/list")
@@ -80,6 +84,7 @@ public class LobbyController {
     /**
      * This endpoint will be called when a player wants to join a game
      * game
+     *
      * @return game
      */
     @PostMapping(value = "/join/game")
@@ -89,7 +94,7 @@ public class LobbyController {
         Player player = playerService.fetchLoggedInUser();
         Game game = gameService.joinAnExistingGame(player, id);
 
-        LOGGER.info(String.format("Player joined an existing game with id %s" , id));
+        LOGGER.info(String.format("Player joined an existing game with id %s", id));
         return game;
     }
 

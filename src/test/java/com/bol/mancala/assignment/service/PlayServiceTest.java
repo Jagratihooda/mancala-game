@@ -29,11 +29,11 @@ public class PlayServiceTest {
     @Mock
     private GameService gameServiceMock;
 
-    private PlayService playService;
+    private PlayServiceImpl playService;
 
     @Before
     public void init() {
-        playService = new PlayService(gameServiceMock, boardServiceMock, pitServiceMock);
+        playService = new PlayServiceImpl(gameServiceMock, boardServiceMock, pitServiceMock);
     }
 
     @Test

@@ -24,12 +24,12 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/board")
 public class BoardController {
 
-    private GameService gameService;
-    private PlayerService playerService;
-    private BoardService boardService;
-    private PlayService playService;
-    private HttpSession httpSession;
-    private SimpMessagingTemplate template;
+    private final GameService gameService;
+    private final PlayerService playerService;
+    private final BoardService boardService;
+    private final PlayService playService;
+    private final HttpSession httpSession;
+    private final SimpMessagingTemplate template;
 
     private final Logger LOG = LoggerFactory.getLogger(BoardController.class);
 

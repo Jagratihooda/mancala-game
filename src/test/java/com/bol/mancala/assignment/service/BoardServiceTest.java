@@ -21,11 +21,11 @@ public class BoardServiceTest {
     private BoardRepository boardRepositoryMock;
 
     @Mock
-    private BoardService boardService;
+    private BoardServiceImpl boardService;
 
     @Before
     public void init() {
-        boardService = new BoardService(boardRepositoryMock);
+        boardService = new BoardServiceImpl(boardRepositoryMock);
     }
 
     @Test

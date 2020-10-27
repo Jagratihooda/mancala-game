@@ -17,12 +17,17 @@ public class PlayerController {
 
     private PlayerService playerService;
 
-    private final Logger logger = LoggerFactory.getLogger(PlayerController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class);
 
 
     @RequestMapping(value = "/loggedin-user")
     public String fetchLoggedInPlayerUserName() {
         ContextUser principal = (ContextUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal.getPlayer().getUsername();
+
+        String userName = principal.getPlayer().getUsername();
+
+        LOGGER.info("Fetched user with UserName " + userName);
+
+        return userName;
     }
 }
