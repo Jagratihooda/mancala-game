@@ -10,14 +10,15 @@ public interface PlayerService {
     /**
      * This method is called to fetch Players details based on username
      *
-     * @param player
+     * @param name
+     * @return player
      */
     Player getPlayerByUsername(String name);
 
     /**
      * This method is called to fetch logged in Players details
      *
-     * @param board
+     * @return player
      */
     Player fetchLoggedInUser();
 
